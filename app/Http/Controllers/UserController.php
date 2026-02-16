@@ -6,6 +6,7 @@ use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -65,14 +66,30 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::find($id);
+
+        $data = $request->validate([
+            'username' => 'required',
+            'email' => 'required|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update($data);
+
+        Alert::success('Sukses', 'Data berhasil diupdate');
+
+        return redirect('/user');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+
+        Alert::success('Sukses', 'Data berhasil dihapus');
+        return redirect('/user');
     }
 }

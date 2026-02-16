@@ -29,12 +29,52 @@
                         </td>
 
                         <td>{{ $user->created_at }}</td>
-                        <td>
-                            <button class="btn btn-warning"><i class="fas fa-pencil"></i></button>
-                            <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        <td class="d-flex gap-2">
+                            <button class="btn btn-warning" data-bs-toggle="modal"
+                                data-bs-target="#editModal{{ $user->id }}"><i class="fas fa-pencil"></i></button>
+                            <form action="/user/{{ $user->id }}" method="POST">
+                                @csrf
+                                @method('delete')
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                            </form>
                         </td>
 
                     </tr>
+
+                    <div class="modal fade" id="editModal{{ $user->id }}" tabindex="-1">
+
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5>Edit User</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <form action="/user/{{ $user->id }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <label>Username</label>
+                                        <input type="text" name="username" class="form-control"
+                                            value="{{ old('username', $user->username) }}">
+
+                                        <label>Email</label>
+                                        <input type="email" name="email" class="form-control"
+                                            value="{{ old('email', $user->email) }}">
+
+                                        <button type="submit" class="btn btn-primary mt-3">
+                                            Update
+                                        </button>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
 
             </table>
@@ -75,4 +115,5 @@
                 </form>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection
