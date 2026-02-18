@@ -80,6 +80,9 @@
             </table>
         </div>
     </div>
+    <div class="mt-4 d-flex justify-content-end">
+        {{ $users->links() }}
+    </div>
 
 
 
