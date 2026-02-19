@@ -1,7 +1,24 @@
 @extends('layouts.app')
 @section('content')
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-            class="fa-solid fa-plus"></i>Tambah</button>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="fa-solid fa-plus"></i> Tambah
+            </button>
+        </div>
+
+        <div class="col-md-6 text-md-end">
+            <form class="d-inline-flex" method="GET" action="">
+                <input class="form-control me-2" type="search" name="search" placeholder="Search"
+                    value="{{ request('search') }}" />
+                <button class="btn btn-success" type="submit">
+                    Search
+                </button>
+            </form>
+        </div>
+
+    </div>
+
 
     <div class="card">
         <div class="card-body">
@@ -29,13 +46,16 @@
                         </td>
 
                         <td>{{ $user->created_at }}</td>
+
                         <td class="d-flex gap-2">
                             <button class="btn btn-warning" data-bs-toggle="modal"
                                 data-bs-target="#editModal{{ $user->id }}"><i class="fas fa-pencil"></i></button>
+
                             <form action="/user/{{ $user->id }}" method="POST">
                                 @csrf
                                 @method('delete')
-                                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#deleteModal{{ $user->id }}"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
 
@@ -72,6 +92,36 @@
                                     </form>
 
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="deleteModal{{ $user->id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Konfirmasi Hapus</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    Apakah Anda yakin ingin menghapus user
+                                    <strong>{{ $user->username }}</strong> ?
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+
+                                    <form action="/user/{{ $user->id }}" method="POST">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="btn btn-danger">
+                                            Ya, Hapus
+                                        </button>
+                                    </form>
+                                </div>
+
                             </div>
                         </div>
                     </div>

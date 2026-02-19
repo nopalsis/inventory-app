@@ -18,6 +18,7 @@ Route::get('/dashboard', function () {
 Route::get('/user', [UserController::class, 'index']);
 Route::post('/user', [UserController::class, 'store']);
 Route::put('/user/{id}', [UserController::class, 'update']);
+Route::get('/users', [UserController::class, 'index'])->name('users.index'); //search
 
 Route::delete('/user/{id}', [UserController::class, 'destroy']);
 
