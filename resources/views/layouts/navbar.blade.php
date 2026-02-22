@@ -3,7 +3,7 @@
     <div class="container-fluid">
 
         <span class="fw-semibold fs-5">
-            Manajemen User
+            Inventory App
         </span>
 
         <div class="d-flex align-items-center gap-3">

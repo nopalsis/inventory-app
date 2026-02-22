@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-<h5>Manajemen User</h5>
+<h5>Manajemen Kategori</h5>
+
     <div class="row mb-3">
         <div class="col-md-6">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -27,43 +28,31 @@
             <table class="table table-hover">
                 <tr>
                     <td>no</td>
-                    <td>Username</td>
-                    <td>email</td>
-                    <td>status</td>
+                    <td>Nama Kategori</td>
                     <td>dibuat pada</td>
                     <td>action</td>
                 </tr>
 
-                @foreach ($users as $user)
+                @foreach ($categories as $category)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $user->username }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>
-                            @if ($user->is_active)
-                                <i class="fa-solid fa-circle text-success"></i>
-                            @else
-                                <i class="fa-solid fa-circle text-danger"></i>
-                            @endif
-                        </td>
-
-                        <td>{{ $user->created_at }}</td>
-
+                        <td>{{ $category->kategori }}</td>
+                        <td>{{ $category->created_at }}</td>
                         <td class="d-flex gap-2">
                             <button class="btn btn-warning" data-bs-toggle="modal"
-                                data-bs-target="#editModal{{ $user->id }}"><i class="fas fa-pencil"></i></button>
+                                data-bs-target="#editModal{{ $category->id }}"><i class="fas fa-pencil"></i></button>
 
-                            <form action="/user/{{ $user->id }}" method="POST">
+                            <form action="/category/{{ $category->id }}" method="POST">
                                 @csrf
                                 @method('delete')
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal{{ $user->id }}"><i class="fas fa-trash"></i></button>
+                                    data-bs-target="#deleteModal{{ $category->id }}"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
 
                     </tr>
 
-                    <div class="modal fade" id="editModal{{ $user->id }}" tabindex="-1">
+                    <div class="modal fade" id="editModal{{ $category->id }}" tabindex="-1">
 
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -75,17 +64,13 @@
 
                                 <div class="modal-body">
 
-                                    <form action="/user/{{ $user->id }}" method="POST">
+                                    <form action="/category/{{ $category->id }}" method="POST">
                                         @csrf
                                         @method('PUT')
 
-                                        <label>Username</label>
-                                        <input type="text" name="username" class="form-control"
-                                            value="{{ old('username', $user->username) }}">
-
-                                        <label>Email</label>
-                                        <input type="email" name="email" class="form-control"
-                                            value="{{ old('email', $user->email) }}">
+                                        <label>Nama Kategori</label>
+                                        <input type="text" name="kategori" class="form-control"
+                                            value="{{ old('kategori', $category->kategori) }}">
 
                                         <button type="submit" class="btn btn-primary mt-3">
                                             Update
@@ -98,7 +83,7 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="deleteModal{{ $user->id }}" tabindex="-1">
+                    <div class="modal fade" id="deleteModal{{ $category->id }}" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
 
@@ -108,14 +93,14 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    Apakah Anda yakin ingin menghapus user
-                                    <strong>{{ $user->username }}</strong> ?
+                                    Apakah Anda yakin ingin menghapus kategori
+                                    <strong>{{ $category->kategori }}</strong> ?
                                 </div>
 
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
 
-                                    <form action="/user/{{ $user->id }}" method="POST">
+                                    <form action="/category/{{ $category->id }}" method="POST">
                                         @csrf
                                         @method('delete')
                                         <button type="submit" class="btn btn-danger">
@@ -133,7 +118,7 @@
         </div>
     </div>
     <div class="mt-4 d-flex justify-content-end">
-        {{ $users->links() }}
+        {{ $categories->links() }}
     </div>
 
 
@@ -144,22 +129,16 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah User</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Katgeori</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
-                    <form action="/user" method="POST">
+                    <form action="/category" method="POST">
                         @csrf
                         <div class="form-group">
-                            <label for=""><b>Username</b></label>
-                            <input type="text" name="username" class="form-control" placeholder="Username">
-                            <label for=""><b>Email</b></label>
-                            <input type="email" name="email" class="form-control" placeholder="example@gmail.com">
-                            <label for=""><b>Password</b></label>
-                            <input type="password" name="password" class="form-control" placeholder="****">
-                            <label for=""><b>Masukkan Ulang Password</b></label>
-                            <input type="password" name="password_confirmation" class="form-control" placeholder="****">
+                            <label for=""><b>Nama Kategori</b></label>
+                            <input type="text" name="kategori" class="form-control" placeholder="Kategori....">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
     
+<h5>Manajemen Dashboard</h5>
 
 <div class="col-md-10 content p-4">
 

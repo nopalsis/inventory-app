@@ -1,7 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
-<h5>Manajemen User</h5>
     <div class="row mb-3">
         <div class="col-md-6">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">

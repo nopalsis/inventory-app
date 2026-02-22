@@ -22,5 +22,13 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="/category"
+               class="nav-link text-white d-flex align-items-center {{ Request::is('category*') ? 'active bg-primary' : '' }}">
+                <i class="fas fa-calendar me-2"></i>
+                Categories
+            </a>
+        </li>
+
     </ul>
 </div>
