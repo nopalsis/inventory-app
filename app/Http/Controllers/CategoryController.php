@@ -31,7 +31,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'kategori'      => 'required',
+            'name'      => 'required',
         ]);
 
         Category::create($data);
@@ -68,6 +68,10 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::find($id);
+        $category->delete();
+
+        Alert::success('Sukses', 'Data berhasil dihapus');
+        return redirect('/category');
     }
 }

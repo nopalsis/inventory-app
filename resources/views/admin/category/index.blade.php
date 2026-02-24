@@ -36,7 +36,7 @@
                 @foreach ($categories as $category)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $category->kategori }}</td>
+                        <td>{{ $category->name }}</td>
                         <td>{{ $category->created_at }}</td>
                         <td class="d-flex gap-2">
                             <button class="btn btn-warning" data-bs-toggle="modal"
@@ -69,8 +69,8 @@
                                         @method('PUT')
 
                                         <label>Nama Kategori</label>
-                                        <input type="text" name="kategori" class="form-control"
-                                            value="{{ old('kategori', $category->kategori) }}">
+                                        <input type="text" name="name" class="form-control"
+                                            value="{{ old('name', $category->name) }}">
 
                                         <button type="submit" class="btn btn-primary mt-3">
                                             Update
@@ -94,7 +94,7 @@
 
                                 <div class="modal-body">
                                     Apakah Anda yakin ingin menghapus kategori
-                                    <strong>{{ $category->kategori }}</strong> ?
+                                    <strong>{{ $category->name }}</strong> ?
                                 </div>
 
                                 <div class="modal-footer">
@@ -138,7 +138,7 @@
                         @csrf
                         <div class="form-group">
                             <label for=""><b>Nama Kategori</b></label>
-                            <input type="text" name="kategori" class="form-control" placeholder="Kategori....">
+                            <input type="text" name="name" class="form-control" placeholder="kategori....">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
