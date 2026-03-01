@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductController extends Controller
@@ -78,7 +79,35 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        $data = $request->validate([
+            'name'         => 'required',
+            'sku'          => 'nullable|unique:products,sku,' . $id,
+            'gambar'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'category_id'  => 'required',
+            'stock'        => 'required|integer',
+            'credit_price' => 'required|numeric',
+            'cash_price'   => 'required|numeric',
+        ]);
+
+        if ($request->hasFile('gambar')) {
+
+            // hapus gambar lama
+            if ($product->gambar && Storage::exists($product->gambar)) {
+                Storage::delete($product->gambar);
+            }
+
+            // simpan gambar baru
+            $data['gambar'] = $request->file('gambar')->store('products', 'public');
+        }
+
+
+        $product->update($data);
+
+        Alert::success('Sukses', 'Data berhasil diupdate');
+
+        return redirect('/product');
     }
 
     /**

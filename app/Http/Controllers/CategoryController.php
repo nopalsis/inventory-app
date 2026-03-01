@@ -60,7 +60,17 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $category = Category::find($id);
+
+        $data = $request->validate([
+            'name' => 'required'
+        ]);
+
+        $category->update($data);
+
+        Alert::success('Sukses', 'Data berhasil diupdate');
+
+        return redirect('/category');
     }
 
     /**

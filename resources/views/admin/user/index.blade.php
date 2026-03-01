@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
-
-<h5>Manajemen User</h5>
+    <h5>Manajemen User</h5>
     <div class="row mb-3">
         <div class="col-md-6">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -57,11 +56,13 @@
                                 @csrf
                                 @method('delete')
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal{{ $user->id }}"><i class="fas fa-trash"></i></button>
+                                    data-bs-target="#deleteModal{{ $user->id }}"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
 
                     </tr>
+
+                    {{-- EDIT MODAL --}}
 
                     <div class="modal fade" id="editModal{{ $user->id }}" tabindex="-1">
 
@@ -79,13 +80,56 @@
                                         @csrf
                                         @method('PUT')
 
-                                        <label>Username</label>
-                                        <input type="text" name="username" class="form-control"
-                                            value="{{ old('username', $user->username) }}">
+                                        <div class="form-group">
+                                            <label><b>Username</b></label>
+                                            <input type="text" name="username"
+                                                class="form-control @error('username') is-invalid @enderror"
+                                                value="{{ isset($user) ? $user->username : old('username') }}"
+                                                placeholder="Username...">
+                                            @error('username')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
 
-                                        <label>Email</label>
-                                        <input type="email" name="email" class="form-control"
-                                            value="{{ old('email', $user->email) }}">
+                                        <div class="form-group">
+                                            <label><b>Email</b></label>
+                                            <input type="email" name="email"
+                                                class="form-control @error('email') is-invalid @enderror"
+                                                value="{{ isset($user) ? $user->email : old('email') }}" placeholder="">
+                                            @error('email')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label><b>Password Baru</b></label>
+                                            <input type="password" name="password"
+                                                class="form-control @error('password') is-invalid @enderror"
+                                                placeholder="(kosongkan jika tidak mengubah password)">
+                                            @error('password')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label><b>Konfirmasi Password</b></label>
+                                            <input type="password" name="password_confirmation"
+                                                class="form-control @error('password_confirmation') is-invalid @enderror"
+                                                value=""
+                                                placeholder="****">
+                                            @error('password_confirmation')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
 
                                         <button type="submit" class="btn btn-primary mt-3">
                                             Update
@@ -97,7 +141,9 @@
                             </div>
                         </div>
                     </div>
+                    {{-- END EDIT MODAL --}}
 
+                    {{-- DELETE MODAL --}}
                     <div class="modal fade" id="deleteModal{{ $user->id }}" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -127,6 +173,7 @@
                             </div>
                         </div>
                     </div>
+                    {{-- END DELETE MODAL --}}
                 @endforeach
 
             </table>
@@ -139,7 +186,7 @@
 
 
 
-    <!-- Modal POPUP TAMBAH -->
+    <!-- Modal POPUP CREATE -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -152,14 +199,51 @@
                     <form action="/user" method="POST">
                         @csrf
                         <div class="form-group">
+
                             <label for=""><b>Username</b></label>
-                            <input type="text" name="username" class="form-control" placeholder="Username">
+                            <input type="text" name="username"
+                                class="form-control @error('username') is-invalid @enderror"
+                                value="{{ old('username') }}" placeholder="">
+                            @error('username')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+
                             <label for=""><b>Email</b></label>
-                            <input type="email" name="email" class="form-control" placeholder="example@gmail.com">
+                            <input type="email" name="email"
+                                class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}"
+                                placeholder="">
+                            @error('email')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+
                             <label for=""><b>Password</b></label>
-                            <input type="password" name="password" class="form-control" placeholder="****">
+                            <input type="password" name="password"
+                                class="form-control @error('password') is-invalid @enderror"
+                                value="{{ old('password') }}" placeholder="">
+                            @error('password')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+
                             <label for=""><b>Masukkan Ulang Password</b></label>
-                            <input type="password" name="password_confirmation" class="form-control" placeholder="****">
+                            <input type="password" name="password_confirmation"
+                                class="form-control @error('password_confirmation') is-invalid @enderror"
+                                value="{{ old('password_confirmation') }}" placeholder="">
+                            @error('password_confirmation')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -171,4 +255,29 @@
             </div>
         </div>
     </div>
+
+    {{-- AUTO OPEN EDIT MODAL IF ERROR --}}
+    @if ($errors->any())
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+
+                let editId = "{{ old('edit_id') }}";
+
+                if (editId) {
+                    // Jika error dari EDIT
+                    var editModal = new bootstrap.Modal(
+                        document.getElementById('editModal' + editId)
+                    );
+                    editModal.show();
+                } else {
+                    // Jika error dari CREATE
+                    var createModal = new bootstrap.Modal(
+                        document.getElementById('exampleModal')
+                    );
+                    createModal.show();
+                }
+
+            });
+        </script>
+    @endif
 @endsection

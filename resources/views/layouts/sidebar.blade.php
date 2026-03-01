@@ -30,5 +30,13 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="/product"
+               class="nav-link text-white d-flex align-items-center {{ Request::is('product*') ? 'active bg-primary' : '' }}">
+                <i class="fas fa-calendar me-2"></i>
+                Products
+            </a>
+        </li>
+
     </ul>
 </div>

@@ -38,7 +38,7 @@
                 @foreach ($products as $product)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><img src="{{ asset('storage/' . $product->gambar) }}" width="100"></td>
+                        <td><img src="{{ asset('storage/' . $product->gambar) }}" width="150"></td>
                         <td>{{ $product->name }}</td>
                         <td>{{ $product->sku }}</td>
                         <td>{{ $product->category->name ?? '-' }}</td>
@@ -63,6 +63,8 @@
 
                     </tr>
 
+                    {{-- EDITMODAL --}}
+
                     <div class="modal fade" id="editModal{{ $product->id }}" tabindex="-1">
 
                         <div class="modal-dialog">
@@ -75,17 +77,110 @@
 
                                 <div class="modal-body">
 
-                                    <form action="/product/{{ $product->id }}" method="POST">
+                                    <form action="/product/{{ $product->id }}" method="POST"
+                                        enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
 
-                                        <label>name</label>
-                                        <input type="text" name="name" class="form-control"
-                                            value="{{ old('name', $product->name) }}">
+                                        <input type="hidden" name="edit_id" value="{{ $product->id }}">
 
-                                        <label>Email</label>
-                                        <input type="email" name="email" class="form-control"
-                                            value="{{ old('email', $product->email) }}">
+                                        <div class="form-group">
+                                            <label for=""><b>Nama Barang</b></label>
+                                            <input type="text" name="name"
+                                                class="form-control @error('name') is-invalid @enderror"
+                                                placeholder="Nama Barang..."
+                                                value="{{ isset($product) ? $product->name : old('name') }}">
+                                            @error('name')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for=""><b>SKU</b></label>
+                                            <input type="text" name="sku"
+                                                class="form-control @error('sku') is-invalid @enderror"
+                                                placeholder="ZNV-xxx"
+                                                value="{{ isset($product) ? $product->sku : old('sku') }}">
+                                            @error('sku')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label><b>Gambar</b></label>
+
+                                            <input type="file" name="gambar"
+                                                class="form-control @error('gambar') is-invalid @enderror"
+                                                onchange="previewImage(event, {{ $product->id }})">
+
+                                            @error('gambar')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                            <img id="preview{{ $product->id }}"
+                                                src="{{ asset('storage/' . $product->gambar) }}" width="50%"
+                                                class="mt-4">
+                                        </div>
+
+                                        <div class="form-group">
+
+                                            <label for=""><b>stok</b></label>
+                                            <input type="number" name="stock"
+                                                class="form-control @error('stock') is-invalid @enderror" placeholder=""
+                                                value="{{ isset($product) ? $product->stock : old('stock') }}">
+                                            @error('stock')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label><b>Kategori</b></label>
+                                            <select name="category_id"
+                                                class="form-control @error('category_id') is-invalid @enderror">
+                                                <option value="">--KATEGORI--</option>
+                                                @foreach ($categories as $category)
+                                                    <option value="{{ $category->id }}"
+                                                        {{ isset($product) && $product->category_id == $category->id ? 'selected' : '' }}>
+                                                        {{ $category->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+
+                                            <label for=""><b>Harga Cash</b></label>
+                                            <input type="text" name="cash_price"
+                                                class="form-control @error('cash_price') is-invalid @enderror"
+                                                placeholder="Rp.xxx"
+                                                value="{{ isset($product) ? $product->cash_price : old('cash_price') }}">
+                                            @error('cash_price')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for=""><b>Harga Kredit</b></label>
+                                            <input type="text" name="credit_price"
+                                                class="form-control @error('credit_price') is-invalid @enderror"
+                                                placeholder="Rp.xxx"
+                                                value="{{ isset($product) ? $product->credit_price : old('credit_price') }}">
+                                            @error('credit_price')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
 
                                         <button type="submit" class="btn btn-primary mt-3">
                                             Update
@@ -98,6 +193,9 @@
                         </div>
                     </div>
 
+                    {{-- END EDITMODAL --}}
+
+                    {{-- DELETE MODAL --}}
                     <div class="modal fade" id="deleteModal{{ $product->id }}" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -113,7 +211,8 @@
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Batal</button>
 
                                     <form action="/product/{{ $product->id }}" method="POST">
                                         @csrf
@@ -127,6 +226,7 @@
                             </div>
                         </div>
                     </div>
+                    {{-- END DELETE MODAL --}}
                 @endforeach
 
             </table>
@@ -139,33 +239,67 @@
 
 
 
-    <!-- Modal POPUP TAMBAH -->
+    <!-- Modal POPUP Create -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Produk</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+                <form action="/product" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Produk</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
 
-                    <form action="/product" method="POST" enctype="multipart/form-data">
-                        @csrf
                         <div class="form-group">
                             <label for=""><b>Nama Barang</b></label>
-                            <input type="text" name="name" class="form-control" placeholder="Nama Barang...">
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+                                value="{{ old('name') }}" placeholder="Nama Barang...">
+                            @error('name')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
 
+                        <div class="form-group">
                             <label for=""><b>SKU</b></label>
-                            <input type="text" name="sku" class="form-control" placeholder="ZNV-xxx">
+                            <input type="text" name="sku" class="form-control @error('sku') is-invalid @enderror"
+                                value="{{ old('sku') }}" placeholder="ZNV-xxx">
+                            @error('sku')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
 
+                        <div class="form-group">
                             <label for=""><b>Gambar</b></label>
-                            <input type="file" name="gambar" class="form-control" placeholder="">
+                            <input type="file" name="gambar"
+                                class="form-control @error('gambar') is-invalid @enderror"
+                                onchange="previewImage(event, 'create')">
+                            <img id="previewcreate" width="50%" class="mt-4">
+                            @error('gambar')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
 
+                        <div class="form-group">
                             <label for=""><b>stok</b></label>
-                            <input type="number" name="stock" class="form-control" placeholder="">
+                            <input type="number" name="stock"
+                                class="form-control @error('stock') is-invalid @enderror" value="{{ old('stock') }}"
+                                placeholder="">
+                            @error('stock')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
 
                             <label><b>Kategori</b></label>
-                            <select name="category_id" class="form-control">
+                            <select name="category_id" class="form-control @error('category_id') is-invalid @enderror"
+                                value="{{ old('category_id') }}">
                                 <option value="">--KATEGORI--</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}"
@@ -174,21 +308,67 @@
                                     </option>
                                 @endforeach
                             </select>
+                            @error('category_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
 
+                        <div class="form-group">
                             <label for=""><b>Harga Cash</b></label>
-                            <input type="text" name="cash_price" class="form-control" placeholder="Rp.xxx">
+                            <input type="text" name="cash_price"
+                                class="form-control @error('cash_price') is-invalid @enderror"
+                                value="{{ old('cash_price') }}" placeholder="Rp.xxx">
+                            @error('cash_price')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
 
+                        <div class="form-group">
                             <label for=""><b>Harga Kredit</b></label>
-                            <input type="text" name="credit_price" class="form-control" placeholder="Rp.xxx">
+                            <input type="text" name="credit_price"
+                                class="form-control @error('credit_price') is-invalid @enderror"
+                                value="{{ old('credit_price') }}" placeholder="Rp.xxx">
+                            @error('credit_price')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
-                </div>
-
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
                 </form>
             </div>
         </div>
-    </div>
-@endsection
+
+        {{-- AUTO OPEN EDIT MODAL IF ERROR --}}
+        @if ($errors->any())
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+
+                    let editId = "{{ old('edit_id') }}";
+
+                    if (editId) {
+                        // Jika error dari EDIT
+                        var editModal = new bootstrap.Modal(
+                            document.getElementById('editModal' + editId)
+                        );
+                        editModal.show();
+                    } else {
+                        // Jika error dari CREATE
+                        var createModal = new bootstrap.Modal(
+                            document.getElementById('exampleModal')
+                        );
+                        createModal.show();
+                    }
+
+                });
+            </script>
+        @endif
+    @endsection

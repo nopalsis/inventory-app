@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
-
-<h5>Manajemen Kategori</h5>
+    <h5>Manajemen Kategori</h5>
 
     <div class="row mb-3">
         <div class="col-md-6">
@@ -53,69 +52,83 @@
                     </tr>
 
                     <div class="modal fade" id="editModal{{ $category->id }}" tabindex="-1">
-
                         <div class="modal-dialog">
                             <div class="modal-content">
 
-                                <div class="modal-header">
-                                    <h5>Edit User</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
+                                <form action="/category/{{ $category->id }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
 
-                                <div class="modal-body">
+                                    <div class="modal-header">
+                                        <h5>Edit Kategori</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
 
-                                    <form action="/category/{{ $category->id }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
+                                    <div class="modal-body">
 
                                         <label>Nama Kategori</label>
-                                        <input type="text" name="name" class="form-control"
+                                        <input type="text" name="name"
+                                            class="form-control @error('name') is-invalid @enderror"
                                             value="{{ old('name', $category->name) }}">
 
-                                        <button type="submit" class="btn btn-primary mt-3">
+                                        @error('name')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Batal</button>
+
+                                        <button type="submit" class="btn btn-primary">
                                             Update
                                         </button>
+                                    </div>
 
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal fade" id="deleteModal{{ $category->id }}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Konfirmasi Hapus</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-
-                                <div class="modal-body">
-                                    Apakah Anda yakin ingin menghapus kategori
-                                    <strong>{{ $category->name }}</strong> ?
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-
-                                    <form action="/category/{{ $category->id }}" method="POST">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="submit" class="btn btn-danger">
-                                            Ya, Hapus
-                                        </button>
-                                    </form>
-                                </div>
+                                </form>
 
                             </div>
                         </div>
                     </div>
-                @endforeach
-
-            </table>
         </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal{{ $category->id }}" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi Hapus</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus kategori
+                    <strong>{{ $category->name }}</strong> ?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+
+                    <form action="/category/{{ $category->id }}" method="POST">
+                        @csrf
+                        @method('delete')
+                        <button type="submit" class="btn btn-danger">
+                            Ya, Hapus
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @endforeach
+
+    </table>
+    </div>
     </div>
     <div class="mt-4 d-flex justify-content-end">
         {{ $categories->links() }}
