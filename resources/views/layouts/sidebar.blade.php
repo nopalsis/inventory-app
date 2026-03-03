@@ -32,9 +32,17 @@
 
         <li class="nav-item">
             <a href="/product"
-               class="nav-link text-white d-flex align-items-center {{ Request::is('product*') ? 'active bg-primary' : '' }}">
-                <i class="fas fa-calendar me-2"></i>
+               class="nav-link text-white d-flex align-items-center {{ Request::is('product') ? 'active bg-primary' : '' }}">
+                <i class="fas fa-shopping-bag me-2"></i>
                 Products
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/product-statement"
+               class="nav-link text-white d-flex align-items-center {{ Request::is('product-statement*') ? 'active bg-primary' : '' }}">
+                <i class="fas fa-clock me-2"></i>
+                Products Statement
             </a>
         </li>
 

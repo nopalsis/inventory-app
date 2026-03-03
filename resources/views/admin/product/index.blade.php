@@ -89,7 +89,7 @@
                                             <input type="text" name="name"
                                                 class="form-control @error('name') is-invalid @enderror"
                                                 placeholder="Nama Barang..."
-                                                value="{{ isset($product) ? $product->name : old('name') }}">
+                                                value="">
                                             @error('name')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}

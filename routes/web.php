@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductStatementController;
 use App\Http\Controllers\UserController;
 use App\Models\Category;
 use Illuminate\Auth\Events\Login;
@@ -33,4 +34,6 @@ Route::post('/product', [ProductController::class, 'store']);
 Route::put('/product/{id}', [ProductController::class, 'update']);
 Route::delete('/product/{id}', [ProductController::class, 'destroy']);
 
-
+Route::get('/product-statement', [ProductStatementController::class, 'index']);
+Route::post('/product-statements', [ProductStatementController::class, 'store'])
+    ->name('product-statements.store');
