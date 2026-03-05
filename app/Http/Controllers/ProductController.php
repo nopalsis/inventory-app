@@ -7,6 +7,8 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\ProductStatement;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -119,6 +121,41 @@ class ProductController extends Controller
         $product->delete();
 
         Alert::success('Sukses', 'Data berhasil dihapus');
+        return redirect('/product');
+    }
+
+    public function updateStock(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'amount'     => 'required|integer|min:1',
+            'type'       => 'required|in:in,out',
+        ]);
+
+        DB::transaction(function () use ($request) {
+
+            $product = Product::lockForUpdate()->findOrFail($request->product_id);
+
+            if ($request->type == 'out' && $product->stock < $request->amount) {
+                throw new \Exception('Stock tidak cukup');
+            }
+
+            ProductStatement::create([
+                'product_id' => $product->id,
+                'amount'     => $request->amount,
+                'type'       => $request->type,
+                'note'       => $request->note,
+            ]);
+
+            if ($request->type == 'in') {
+                $product->increment('stock', $request->amount);
+            } else {
+                $product->decrement('stock', $request->amount);
+            }
+        });
+
+        Alert::success('Sukses', 'Stock berhasil diupdate');
+
         return redirect('/product');
     }
 }

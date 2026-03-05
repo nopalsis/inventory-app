@@ -42,34 +42,6 @@ class ProductStatementController extends Controller
             'type'       => 'required|in:in,out',
         ]);
 
-        DB::transaction(function () use ($request) {
-
-            $product = Product::lockForUpdate()->findOrFail($request->product_id);
-
-            if ($request->type == 'out' && $product->stock < $request->amount) {
-                throw new \Exception('Stock tidak cukup');
-            }
-
-            // Histori
-            ProductStatement::create([
-                'product_id' => $product->id,
-                // 'user_id'    => auth()->id(),
-                'amount'     => $request->amount,
-                'type'       => $request->type,
-                'note'       => $request->note,
-            ]); 
-            
-
-            if ($request->type == 'in') {
-                $product->increment('stock', $request->amount);
-            } else {
-                $product->decrement('stock', $request->amount);
-            }
-        });
-
-        Alert::success('Sukses', 'Data berhasil diupdate');
-
-        return redirect('/product-statement');
     }
 
     /**

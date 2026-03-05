@@ -32,6 +32,7 @@
                     <td>Stok</td>
                     <td>Harga Cash</td>
                     <td>Harga Kredit</td>
+                    <td>Barang Keluar/Masuk</td>
                     <td>Action</td>
                 </tr>
 
@@ -45,9 +46,31 @@
                         <td>{{ $product->stock }}</td>
                         <td>{{ $product->cash_price }}</td>
                         <td>{{ $product->credit_price }}</td>
+                        <td>
+                            <div class="text-center">
+                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                    <form action="{{ route('product.updateStock') }}" method="POST" class="d-flex gap-1">
+                                        @csrf
 
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                                        <input type="number" name="amount" class="form-control form-control-sm"
+                                            style="width:70px">
+
+                                        <select name="type" class="form-control form-control-sm" style="width:60px">
+                                            <option value="in"><b>Masuk</b></option>
+                                            <option value="out"><b>keluar</b></option>
+                                        </select>
+
+                                        <button class="btn btn-success btn-sm">OK</button>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center align-items-center gap-2">
+
                                 <button class="btn btn-warning" data-bs-toggle="modal"
                                     data-bs-target="#editModal{{ $product->id }}"><i class="fas fa-pencil"></i></button>
 
@@ -57,6 +80,7 @@
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                         data-bs-target="#deleteModal{{ $product->id }}"><i
                                             class="fas fa-trash"></i></button>
+
                                 </form>
                             </div>
                         </td>
@@ -88,8 +112,7 @@
                                             <label for=""><b>Nama Barang</b></label>
                                             <input type="text" name="name"
                                                 class="form-control @error('name') is-invalid @enderror"
-                                                placeholder="Nama Barang..."
-                                                value="">
+                                                placeholder="Nama Barang..." value="">
                                             @error('name')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}

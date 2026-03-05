@@ -33,6 +33,8 @@ Route::get('/product', [ProductController::class, 'index']);
 Route::post('/product', [ProductController::class, 'store']);
 Route::put('/product/{id}', [ProductController::class, 'update']);
 Route::delete('/product/{id}', [ProductController::class, 'destroy']);
+Route::post('/product/update-stock', [ProductController::class, 'updateStock'])
+    ->name('product.updateStock');
 
 Route::get('/product-statement', [ProductStatementController::class, 'index']);
 Route::post('/product-statements', [ProductStatementController::class, 'store'])

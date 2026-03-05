@@ -38,39 +38,4 @@
     </div>
 </div>
 
-
-<form action="{{ route('product-statements.store') }}" method="POST">
-    @csrf
-
-    <div>
-        <label>Product</label>
-        <select name="product_id" required>
-            @foreach ($products as $product)
-                <option value="{{ $product->id }}">
-                    {{ $product->name }} (Stock: {{ $product->stock }})
-                </option>
-            @endforeach
-        </select>
-    </div>
-
-    <div>
-        <label>Type</label>
-        <select name="type" required>
-            <option value="in">Stock In</option>
-            <option value="out">Stock Out</option>
-        </select>
-    </div>
-
-    <div>
-        <label>Amount</label>
-        <input type="number" name="amount" required>
-    </div>
-
-    <div>
-        <label>Note</label>
-        <input type="text" name="note">
-    </div>
-
-    <button type="submit">Submit</button>
-</form>
 @endsection
