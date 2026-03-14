@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductStatement;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use RealRashid\SweetAlert\Facades\Alert;
+
 
 class ProductStatementController extends Controller
 {
@@ -36,12 +35,8 @@ class ProductStatementController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'amount'     => 'required|integer|min:1',
-            'type'       => 'required|in:in,out',
-        ]);
-
+   
+    
     }
 
     /**

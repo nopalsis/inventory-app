@@ -32,7 +32,6 @@
                     <td>Stok</td>
                     <td>Harga Cash</td>
                     <td>Harga Kredit</td>
-                    <td>Barang Keluar/Masuk</td>
                     <td>Action</td>
                 </tr>
 
@@ -43,31 +42,13 @@
                         <td>{{ $product->name }}</td>
                         <td>{{ $product->sku }}</td>
                         <td>{{ $product->category->name ?? '-' }}</td>
-                        <td>{{ $product->stock }}</td>
+                        <td><b>{{ $product->stock }}</b>
+                            <button class="btn btn-primary ms-2" style="width:50px" data-bs-toggle="modal"
+                                data-bs-target="#editStokModal{{ $product->id }}"><i class="fas fa-pencil"></i></button>
+                        </td>
                         <td>{{ $product->cash_price }}</td>
                         <td>{{ $product->credit_price }}</td>
-                        <td>
-                            <div class="text-center">
-                                <div class="d-flex justify-content-center align-items-center gap-2">
-                                    <form action="{{ route('product.updateStock') }}" method="POST" class="d-flex gap-1">
-                                        @csrf
 
-                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                                        <input type="number" name="amount" class="form-control form-control-sm"
-                                            style="width:70px">
-
-                                        <select name="type" class="form-control form-control-sm" style="width:60px">
-                                            <option value="in"><b>Masuk</b></option>
-                                            <option value="out"><b>keluar</b></option>
-                                        </select>
-
-                                        <button class="btn btn-success btn-sm">OK</button>
-
-                                    </form>
-                                </div>
-                            </div>
-                        </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center align-items-center gap-2">
 
@@ -86,6 +67,55 @@
                         </td>
 
                     </tr>
+
+
+                    {{-- EDIT STOK MODAL --}}
+
+                    <div class="modal fade" id="editStokModal{{ $product->id }}" tabindex="-1">
+
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5>Edit Stok Product</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <form action="{{ route('product.updateStock') }}" method="POST">
+                                        @csrf
+
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                                        <label class="form-label fw-bold">Jumlah Barang Masuk / Keluar</label>
+                                        <div class="input-group input-group-sm">
+                                            <button type="button" class="btn btn-outline-secondary"
+                                                onclick="kurang({{ $product->id }})">−</button>
+
+                                            <input type="number" id="amount{{ $product->id }}" name="amount"
+                                                class="form-control text-center" value="0">
+
+                                            <button type="button" class="btn btn-outline-secondary"
+                                                onclick="tambah({{ $product->id }})">+</button>
+
+                                            <select name="type" class="form-select ms-2">
+                                                <option value="in">Masuk</option>
+                                                <option value="out">Keluar</option>
+                                            </select>
+
+                                        </div>
+
+                                        <button type="submit" class="btn btn-success btn-sm mt-3">
+                                            Simpan
+                                        </button>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     {{-- EDITMODAL --}}
 
@@ -112,7 +142,7 @@
                                             <label for=""><b>Nama Barang</b></label>
                                             <input type="text" name="name"
                                                 class="form-control @error('name') is-invalid @enderror"
-                                                placeholder="Nama Barang..." value="">
+                                                placeholder="Nama Barang..." value="{{ isset($product) ? $product->name : old('name') }}">
                                             @error('name')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -394,4 +424,18 @@
                 });
             </script>
         @endif
+
+        <script>
+            function tambah(id) {
+                let input = document.getElementById('amount' + id);
+                input.value = parseInt(input.value || 0) + 1;
+            }
+
+            function kurang(id) {
+                let input = document.getElementById('amount' + id);
+                if (input.value > 0) {
+                    input.value = parseInt(input.value) - 1;
+                }
+            }
+        </script>
     @endsection

@@ -5,19 +5,23 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductStatementController;
 use App\Http\Controllers\UserController;
-use App\Models\Category;
-use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
 //     return view('login');
 // });
 
-Route::get('/', [AuthController::class, 'login']);
+Route::get('/', function () {
+    return redirect('/login');
+});
+Route::get('/login', [AuthController::class, 'login']);
+Route::post('/login/do', [AuthController::class, 'doLogin']);
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', function () {
     return view('admin.dashboard.index');
-});
+})->middleware('auth');
 
 Route::get('/user', [UserController::class, 'index'])->name('users.index'); //search
 Route::post('/user', [UserController::class, 'store']);
